@@ -85,6 +85,7 @@ def main(config_fpath):
 
     print("Loading dataset...")
     train_dataset, valid_dataset, test_dataset = utils.get_dataset(config,
+                                                                   vocab,
                                                                    current_log_dir)
     
     print("Creating model...")

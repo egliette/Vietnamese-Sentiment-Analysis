@@ -37,17 +37,17 @@ def get_vocab_and_word2vec(config, log_dir):
     load_fpath = config["vocab"]["load_fpath"]
 
     if load_fpath is not None:
-        my_vocab = torch.load(load_fpath)
+        vocabulary = torch.load(load_fpath)
     else:
-        my_vocab = create_vocab_from_word2vec(word_embedding)
+        vocabulary = create_vocab_from_word2vec(word_embedding)
 
     if config["vocab"]["save"]:
-        torch.save(my_vocab, f"{log_dir}/vocab.pt")
+        torch.save(vocabulary, f"{log_dir}/vocab.pt")
 
-    return my_vocab, word_embedding
+    return vocabulary, word_embedding
 
-def get_dataset(config, log_dir):
-    dataset = IMDBDataset(vocab, 
+def get_dataset(config, vocabulary, log_dir):
+    dataset = IMDBDataset(vocabulary, 
                           config["dataset"]["csv_fpath"],
                           config["dataset"]["tokenized_fpath"])
 
@@ -57,7 +57,7 @@ def get_dataset(config, log_dir):
     return split_dataset(dataset, 
                          config["dataset"]["split_rate"])
 
-def get_model(config, vocab, word_embedding):
+def get_model(config, vocabulary, word_embedding):
     embedding_dim = config["model"]["embedding_dim"]
     hidden_dim = config["model"]["hidden_dim"]
     n_layers = config["model"]["n_layers"]
@@ -65,8 +65,8 @@ def get_model(config, vocab, word_embedding):
     dropout = config["model"]["dropout"]
 
     input_dim = word_embedding.vectors.shape[0]
-    pad_idx = vocab["<pad>"]
-    unk_idx = vocab["<unk>"]
+    pad_idx = vocabulary["<pad>"]
+    unk_idx = vocabulary["<unk>"]
 
     model = RNN(input_dim, 
                 embedding_dim, 
