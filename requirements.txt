@@ -3,3 +3,4 @@ torchtext
 pandas
 tqdm
 numpy
+underthesea

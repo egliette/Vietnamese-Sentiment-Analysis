@@ -27,7 +27,7 @@ def train(model, dataset, batch_size, optimizer, criterion, pad_idx, device):
     
     model.train()
     
-    for batch in batch_iterator(dataset, batch_size, pad_idx, device):
+    for batch in utils.batch_iterator(dataset, batch_size, pad_idx, device):
         
         optimizer.zero_grad()
         
@@ -37,7 +37,7 @@ def train(model, dataset, batch_size, optimizer, criterion, pad_idx, device):
         
         loss = criterion(predictions, batch["sentiments"])
         
-        acc = binary_accuracy(predictions, batch["sentiments"])
+        acc = utils.binary_accuracy(predictions, batch["sentiments"])
         
         loss.backward()
         
@@ -67,7 +67,7 @@ def evaluate(model, dataset, batch_size, criterion, pad_idx, device):
     
     with torch.no_grad():
     
-        for batch in batch_iterator(dataset, batch_size, pad_idx, device):
+        for batch in utils.batch_iterator(dataset, batch_size, pad_idx, device):
 
             reviews, reviews_lengths = batch["reviews"]
             
@@ -75,7 +75,7 @@ def evaluate(model, dataset, batch_size, criterion, pad_idx, device):
             
             loss = criterion(predictions, batch["sentiments"])
             
-            acc = binary_accuracy(predictions, batch["sentiments"])
+            acc = utils.binary_accuracy(predictions, batch["sentiments"])
 
             epoch_loss += loss.item()
             epoch_acc += acc.item()
