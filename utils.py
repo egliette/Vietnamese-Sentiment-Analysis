@@ -32,7 +32,7 @@ def create_vocab_from_word2vec(word_embedding):
 
     return vocab
 
-def get_vocab_and_word2vec(config, word_embedding, log_dir):
+def get_vocab_and_word2vec(config, log_dir):
     word_embedding = get_pretrained_word2vec(config["model"]["embedding_fpath"])
     load_fpath = config["vocab"]["load_fpath"]
 

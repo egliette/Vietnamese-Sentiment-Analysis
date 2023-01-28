@@ -80,7 +80,6 @@ def main(config_fpath):
 
     print("Creating vocabulary...")     
     vocab, word_embedding = utils.get_vocab_and_word2vec(config, 
-                                                         word_embedding,
                                                          current_log_dir)    
     pad_idx = vocab["<pad>"]
 
