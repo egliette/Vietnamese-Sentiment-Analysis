@@ -71,7 +71,6 @@ def evaluate(model, dataset, batch_size, criterion, pad_idx, device):
     return epoch_loss / batch_num, epoch_acc / batch_num
 
 def main(config_fpath):
-
     config = utils.get_config(config_fpath)
 
     print("Create logs folder...")
@@ -114,7 +113,7 @@ def main(config_fpath):
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         begin_epoch = checkpoint['epoch'] + 1
-        print(f"Continue at epoch {begin_epoch}")
+        print(f"Continue after epoch {begin_epoch}")
     else:
         begin_epoch = 0
 
@@ -165,7 +164,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train Vietnamese Sentiment Analyis model")
 
     parser.add_argument("--config", 
-                        default="config.yml", 
+                        default="configs/config.yml", 
                         help="path to config file",
                         dest="config_fpath")
     
