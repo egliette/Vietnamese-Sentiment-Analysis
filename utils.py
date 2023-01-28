@@ -37,14 +37,14 @@ def get_vocab_and_word2vec(config, log_dir):
     load_fpath = config["vocab"]["load_fpath"]
 
     if load_fpath is not None:
-        vocab = torch.load(load_fpath)
+        my_vocab = torch.load(load_fpath)
     else:
-        vocab = create_vocab_from_word2vec(word_embedding)
+        my_vocab = create_vocab_from_word2vec(word_embedding)
 
     if config["vocab"]["save"]:
-        torch.save(vocab, f"{log_dir}/vocab.pt")
+        torch.save(my_vocab, f"{log_dir}/vocab.pt")
 
-    return vocab, word_embedding
+    return my_vocab, word_embedding
 
 def get_dataset(config, log_dir):
     dataset = IMDBDataset(vocab, 
