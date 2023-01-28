@@ -1,0 +1,20 @@
+dataset:
+  csv_fpath: "VI_IMDB.csv"
+  split_rate: 0.8
+
+model:
+  embedding_fpath: "vi_word2vec.txt"
+  embedding_dim: 100
+  hidden_dim: 256
+  n_layers: 2
+  bidirectional: True
+  dropout: 0.5
+
+train:
+  n_epochs: 6
+  batch_size: 100
+  logs_dir: null
+  save_epoch: 2
+
+continue:
+  state_fpath: null
