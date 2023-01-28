@@ -6,7 +6,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from IMDBDataset import IMDBDataset
 import utils
 
 
@@ -28,19 +27,12 @@ def train(model, dataset, batch_size, optimizer, criterion, pad_idx, device):
     model.train()
     
     for batch in utils.batch_iterator(dataset, batch_size, pad_idx, device):
-        
         optimizer.zero_grad()
-        
         reviews, reviews_lengths = batch["reviews"]
-        
         predictions = model(reviews, reviews_lengths).squeeze(1)
-        
         loss = criterion(predictions, batch["sentiments"])
-        
         acc = utils.binary_accuracy(predictions, batch["sentiments"])
-        
         loss.backward()
-        
         optimizer.step()
         
         epoch_loss += loss.item()
@@ -66,15 +58,10 @@ def evaluate(model, dataset, batch_size, criterion, pad_idx, device):
     model.eval()
     
     with torch.no_grad():
-    
         for batch in utils.batch_iterator(dataset, batch_size, pad_idx, device):
-
             reviews, reviews_lengths = batch["reviews"]
-            
             predictions = model(reviews, reviews_lengths).squeeze(1)
-            
             loss = criterion(predictions, batch["sentiments"])
-            
             acc = utils.binary_accuracy(predictions, batch["sentiments"])
 
             epoch_loss += loss.item()
@@ -87,15 +74,20 @@ def main(config_fpath):
 
     config = utils.get_config(config_fpath)
 
-    print("Creating vocabulary...")
-    word_embedding = utils.get_pretrained_word2vec(config["model"]["embedding_fpath"])
-    vocab = utils.create_vocab_from_word2vec(word_embedding)
+    print("Create logs folder...")
+    current_log_dir, state_dir = utils.create_logs_dir(config)
+    print(f"The current log dir is {current_log_dir}")
+
+    print("Creating vocabulary...")     
+    vocab, word_embedding = utils.get_vocab_and_word2vec(config, 
+                                                         word_embedding,
+                                                         current_log_dir)    
     pad_idx = vocab["<pad>"]
 
     print("Loading dataset...")
-    dataset = IMDBDataset(vocab, config["dataset"]["csv_fpath"])
-    train_dataset, valid_dataset, test_dataset = utils.split_dataset(dataset,
-                                                               config["dataset"]["split_rate"])
+    train_dataset, valid_dataset, test_dataset = utils.get_dataset(config,
+                                                                   current_log_dir)
+    
     print("Creating model...")
     model = utils.get_model(config, vocab, word_embedding)
 
@@ -104,13 +96,6 @@ def main(config_fpath):
     optimizer = optim.Adam(model.parameters())
     criterion = nn.BCEWithLogitsLoss().to(device)
     model = model.to(device)
-
-    print("Create logs folder...")
-    logs_dir = config["train"]["logs_dir"]
-    if logs_dir is None:
-        logs_dir = "logs"
-    utils.create_dir(logs_dir)
-    current_log_dir, state_dir = utils.create_current_log_dir(logs_dir)
 
     print("Creating SummaryWriter...")
     writer = utils.get_writer(log_dir=current_log_dir)
@@ -129,6 +114,7 @@ def main(config_fpath):
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         begin_epoch = checkpoint['epoch'] + 1
+        print(f"Continue at epoch {begin_epoch}")
     else:
         begin_epoch = 0
 
@@ -157,7 +143,7 @@ def main(config_fpath):
 
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
-            torch.save(model.state_dict(), "model.pt")
+            torch.save(model.state_dict(), f"{current_log_dir}/model.pt")
 
         if ((epoch + 1) % save_epoch) == 0:
             print(f"Saving state at epoch {epoch+1}")

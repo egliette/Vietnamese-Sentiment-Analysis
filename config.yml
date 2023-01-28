@@ -1,5 +1,11 @@
+vocab:
+  load_fpath: null
+  save: true
+
 dataset:
   csv_fpath: "VI_IMDB.csv"
+  tokenized_fpath: null
+  tokenized_save: true
   split_rate: 0.8
 
 model:
@@ -7,7 +13,7 @@ model:
   embedding_dim: 100
   hidden_dim: 256
   n_layers: 2
-  bidirectional: True
+  bidirectional: true
   dropout: 0.5
 
 train:

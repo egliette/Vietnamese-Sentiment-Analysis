@@ -11,6 +11,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from RNN import RNN
 from Vocabulary import Vocabulary
+from IMDBDataset import IMDBDataset
 
 
 def get_config(file_path):
@@ -30,6 +31,31 @@ def create_vocab_from_word2vec(word_embedding):
         vocab.add(word)
 
     return vocab
+
+def get_vocab_and_word2vec(config, word_embedding, log_dir):
+    word_embedding = get_pretrained_word2vec(config["model"]["embedding_fpath"])
+    load_fpath = config["vocab"]["load_fpath"]
+
+    if load_fpath is not None:
+        vocab = torch.load(load_fpath)
+    else:
+        vocab = create_vocab_from_word2vec(word_embedding)
+
+    if config["vocab"]["save"]:
+        torch.save(vocab, f"{log_dir}/vocab.pt")
+
+    return vocab, word_embedding
+
+def get_dataset(config, log_dir):
+    dataset = IMDBDataset(vocab, 
+                          config["dataset"]["csv_fpath"],
+                          config["dataset"]["tokenized_fpath"])
+
+    if config["dataset"]["tokenized_save"]:
+        torch.save(dataset.tokenized_reviews, f"{log_dir}/tokenized.pt")
+  
+    return split_dataset(dataset, 
+                         config["dataset"]["split_rate"])
 
 def get_model(config, vocab, word_embedding):
     embedding_dim = config["model"]["embedding_dim"]
@@ -75,6 +101,13 @@ def create_current_log_dir(logs_dir):
     state_dir = f"{current_log_dir}/state"
     create_dir(state_dir)
     return current_log_dir, state_dir
+
+def create_logs_dir(config):
+    logs_dir = config["train"]["logs_dir"]
+    if logs_dir is None:
+        logs_dir = "logs"
+    create_dir(logs_dir)
+    return create_current_log_dir(logs_dir)
 
 def get_writer(log_dir):
     tensorboard_dpath = f"{log_dir}/tensorboard" 
