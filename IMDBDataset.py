@@ -18,7 +18,9 @@ class IMDBDataset(Dataset):
         self.sentiments_list = list(df.sentiment)
         self.reviews_list = list(df.vi_review)
 
-        sentiments_type = set(self.sentiments_list)
+        sentiments_type = list(set(self.sentiments_list))
+        sentiments_type.sort()
+
         self.sentiment2id = {sentiment: i for i, sentiment in enumerate(sentiments_type)}
 
         if tokenized_fpath:
