@@ -9,8 +9,7 @@ from RNN import RNN
 def main(config_fpath, sentence):
     config = utils.get_config(config_fpath)
 
-    model = RNN()
-    model.load_state_dict(torch.load(config["model_fpath"]))
+    model = torch.load(config["model_fpath"])
     vocab = torch.load(config["vocab_fpath"])
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,6 +21,8 @@ def main(config_fpath, sentence):
     length = [len(tensor)]
     length_tensor = torch.LongTensor(length)
     prediction = torch.sigmoid(model(tensor, length_tensor))
+    
+    print(prediction.item())
     return prediction.item()
 
 

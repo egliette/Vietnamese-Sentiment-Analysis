@@ -142,7 +142,7 @@ def main(config_fpath):
 
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
-            torch.save(model.state_dict(), f"{current_log_dir}/model.pt")
+            torch.save(model, f"{current_log_dir}/model.pt")
 
         if ((epoch + 1) % save_epoch) == 0:
             print(f"Saving state at epoch {epoch+1}")
