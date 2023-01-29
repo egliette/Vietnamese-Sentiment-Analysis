@@ -9,6 +9,7 @@
 [![tensorflow 2.11.0](https://img.shields.io/badge/tensorflow-2.11.0-orange)](https://pypi.org/project/tensorflow/2.11.0/) 
 [![tensorboard 2.11.2](https://img.shields.io/badge/tensorboard-2.11.2-orange)](https://pypi.org/project/tensorboard/2.11.2/) 
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NsMMzHGy2EWaJdRtgX-ZbiVNDE2G_dSZ?usp=sharing)  
 
 Build a simple Sentiment Analysis model on the IMDB dataset that has been translated into Vietnamese.
 
