@@ -47,6 +47,7 @@ def get_vocab_and_word2vec(config, log_dir):
     return vocabulary, word_embedding
 
 def get_dataset(config, vocabulary, log_dir):
+    """Load the full dataset and return train, validate and test sets"""
     dataset = IMDBDataset(vocabulary, 
                           config["dataset"]["csv_fpath"],
                           config["dataset"]["tokenized_fpath"])

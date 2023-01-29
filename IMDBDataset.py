@@ -4,8 +4,7 @@ from torch.utils.data import Dataset
 
 
 class IMDBDataset(Dataset):
-    """ Load dataset from file csv
-    """
+    """Load dataset from file csv"""
 
     def __init__(self, vocab, csv_fpath=None, tokenized_fpath=None):
         """
