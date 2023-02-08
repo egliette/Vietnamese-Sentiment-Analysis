@@ -13,6 +13,7 @@ class IMDBDataset(Dataset):
         @param tokenized_fpath (str)
         """
         self.vocab = vocab
+        self.pad_idx = vocab["<pad>"]
         df = pd.read_csv(csv_fpath)
         self.sentiments_list = list(df.sentiment)
         self.reviews_list = list(df.vi_review)
