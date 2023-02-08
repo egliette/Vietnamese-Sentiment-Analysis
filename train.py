@@ -32,7 +32,7 @@ def train(model, dataloader, optimizer, criterion, device):
         predictions = model(reviews, reviews_lengths).squeeze(1)
         sentiments = batch["sentiments"].to(device)
         loss = criterion(predictions, sentiments)
-        acc = binary_accuracy(predictions, sentiments)
+        acc = utils.binary_accuracy(predictions, sentiments)
     
         loss.backward()    
         optimizer.step()
@@ -65,7 +65,7 @@ def evaluate(model, dataloader, criterion, device):
           
             sentiments = batch["sentiments"].to(device)
             loss = criterion(predictions, sentiments)  
-            acc = binary_accuracy(predictions, sentiments)
+            acc = utils.binary_accuracy(predictions, sentiments)
 
             epoch_loss += loss.item()
             epoch_acc += acc.item()
@@ -86,7 +86,7 @@ def main(config_fpath):
     pad_idx = vocab["<pad>"]
 
     print("Loading dataset...")
-    train_dataset, valid_dataset, test_dataset = utils.get_dataset(config,
+    dataset, (train_dataset, valid_dataset, test_dataset) = utils.get_dataset(config,
                                                                    vocab,
                                                                    current_log_dir)
 

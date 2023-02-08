@@ -55,8 +55,7 @@ def get_dataset(config, vocabulary, log_dir):
     if config["dataset"]["tokenized_save"]:
         torch.save(dataset.tokenized_reviews, f"{log_dir}/tokenized.pt")
   
-    return split_dataset(dataset, 
-                         config["dataset"]["split_rate"])
+    return dataset, split_dataset(dataset, config["dataset"]["split_rate"])
 
 def get_model(config, vocabulary, word_embedding):
     embedding_dim = config["model"]["embedding_dim"]
