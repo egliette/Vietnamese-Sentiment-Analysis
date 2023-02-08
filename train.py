@@ -5,6 +5,7 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import DataLoader
 
 import utils
 
@@ -25,7 +26,6 @@ def train(model, dataloader, optimizer, criterion, device):
     model.train()
     
     for batch in dataloader:
-        
         optimizer.zero_grad()
         reviews, reviews_lengths = batch["reviews"]
         reviews = reviews.to(device)
@@ -59,7 +59,6 @@ def evaluate(model, dataloader, criterion, device):
     
     with torch.no_grad():
         for batch in dataloader:
-
             reviews, reviews_lengths = batch["reviews"]
             reviews = reviews.to(device)
             predictions = model(reviews, reviews_lengths).squeeze(1)
