@@ -163,15 +163,13 @@ def main(config_fpath):
         if ((epoch + 1) % save_epoch) == 0:
             print(f"Saving state at epoch {epoch+1}")
             state_fpath = f"{state_dir}/epoch{epoch+1}.pt"
-            torch.save({
-                    "epoch": epoch,
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optimizer.state_dict(),
-                    }, state_fpath)
+            torch.save({"epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict()},
+                       state_fpath)
 
     print("Testing...")
-    test_loss, test_acc = evaluate(model, test_dataset, batch_size, 
-                               criterion, pad_idx, device)
+    test_loss, test_acc = evaluate(model, test_dataloader, criterion, device)
 
     print(f"Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%")
 
