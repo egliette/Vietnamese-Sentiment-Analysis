@@ -36,3 +36,16 @@ class IMDBDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.tensor_data[idx], self.tensor_label[idx]
+
+
+    def collate_fn(self, examples):
+        examples = sorted(examples, key=lambda e: len(e[0]), reverse=True)
+
+        reviews = [e[0] for e in examples]
+        reviews = torch.nn.utils.rnn.pad_sequence(reviews, 
+                                                  batch_first=False, 
+                                                  padding_value=self.pad_idx)
+        reviews_lengths = torch.tensor([len(e[0]) for e in examples])
+        sentiments = torch.tensor([e[1] for e in examples])
+
+        return {"reviews": (reviews, reviews_lengths), "sentiments": sentiments} 
